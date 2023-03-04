@@ -1581,7 +1581,7 @@ yürüyüşe gitmek/go walking
 yüzme/swimming
 yüzmek/swim
 yüzmeye gitmek/go swimming
-yüztıl, asır/century
+yüzyıl, asır/century
 yüzünden/because of
 zaman/time
 zamanla/by the time
