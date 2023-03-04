@@ -1,31 +1,32 @@
 import IO.FileOperation;
+import Util.Mapper;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Dictionary {
 
     //Bu map ler key olarak kelimeyi value olarak ise diğer dildeki karşılığını tutacak.
     //Eğer aynı kelimeden birden fazla varsa bunların value ları , ile ayrılarak tutulacak
     //ÖRNEK: {"şimdi":"present,now,currently"}
-    private Map<String,String> tr2en;
-    private Map<String,String> en2tr;
 
-    private Scanner scanner = new Scanner(System.in);
+    private Map<String,List<String>> tr2en;
+    private Map<String,List<String>> en2tr;
+
+    private final Scanner scanner = new Scanner(System.in);
 
     private final String turkishTxt = "tureng.txt";
     private final String englishTxt = "engtur.txt";
 
-    private String rootPath = System.getProperty("user.dir");
+    private final String rootPath = System.getProperty("user.dir");
 
     private void txtToMap(){
         //first read files and store words
         try {
             //turkish - english
-            tr2en = toMap( FileOperation.fo.readFile(rootPath + "/asset/" + turkishTxt));
+            tr2en = Mapper.m.toMap(FileOperation.fo.readFileToStringList(rootPath + "/asset/" + turkishTxt));
             //english - turkish
-            en2tr = toMap(FileOperation.fo.readFile(rootPath + "/asset/" + englishTxt));
+            en2tr = Mapper.m.toMap(FileOperation.fo.readFileToStringList(rootPath + "/asset/" + englishTxt));
         } catch (IOException e) {
             System.out.println("Kelimeleri okuma esnasında bir hata meydana geldi!!");
         }
@@ -109,22 +110,16 @@ public class Dictionary {
         }
     }
 
-    private Map<String,String> toMap(List<String> list){
-        return list.stream()
-                .map(str -> str.split("/", 2))
-                .collect(Collectors.groupingBy(
-                        arr -> arr[0],
-                        Collectors.mapping(arr -> arr[1], Collectors.joining(","))
-                ));
-    }
-
     public void startDictionary() {
         txtToMap();
         while(true){
             mainMenu();
             int dictionaryType = scanner.nextInt();
             scanner.nextLine();
-            if (dictionaryType == 1){
+            if (dictionaryType == 0){
+                break;
+            }
+            else if (dictionaryType == 1){
                 case1();
             }
             else if (dictionaryType == 2){
@@ -133,17 +128,9 @@ public class Dictionary {
             else if(dictionaryType == 3){
                 case3();
             }
-            else if (dictionaryType == 0){
-                break;
-            }
             else{
                 System.out.println("Lütfen geçerli bir seçenek seçiniz...");
             }
         }
-    }
-
-    public static void main(String[] args) {
-        Dictionary dictionary = new Dictionary();
-        dictionary.startDictionary();
     }
 }
